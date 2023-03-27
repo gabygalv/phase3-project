@@ -1,62 +1,62 @@
-from sqlalchemy import create_engine
-from sqlalchemy import Column, String, Integer, DateTime, ForeignKey
+from sqlalchemy import (PrimaryKeyConstraint, Column, String, Integer, DateTime, ForeignKey)
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.org import sessionmaker
 
-#connected with db
-engine = create_engine('sqlite:///encounter_counter.db', echo=True)
+
 
 #manages tables
-base = declarative_base()
+Base = declarative_base()
 
 #truther, ufo, sightings
-
-class Truther(base):
+class Truther(Base):
     __tablename__ = 'truthers'
+    __table_args__ = (PrimaryKeyConstraint('id'),)
 
-    id = Column(Integer, primary_key=True)
-    username = Column(String)
-    base_location = Column(String)
+    id = Column(Integer())
+    username = Column(String())
+    base_location = Column(String())
 
-    def __init__(self, id, username, base_location):
-        self.id = id
-        self.username = username
-        self.base_location = base_location
+    def __repr__(self):
+     return f"ID: {self.id}, " \
+            + f"Username: {self.username}, " \
+            + f"Base Location: {self.base_location}, " \
 
-class UFO(base):
-    __tablename__ = 'UFOs'
+class UFO(Base):
+    __tablename__ = 'ufos'
+    __table_args__ = (PrimaryKeyConstraint('id'),)
 
-    id = Column(Integer, primary_key=True)
-    shape = Column(String)
 
-    def __init__(self, id, shape='Unknown'):
-        self.id = id
-        self.shape = shape
+    id = Column(Integer())
+    shape = Column(String())
 
-class Sighting(base):
-    __tablename__ = 'Sightings'
+    def __repr__(self):
+     return f"ID: {self.id}," \
+            + f"Shape: {self.shape}," \
 
-    id = Column(Integer, primary_key=True)
-    location = Column(String)
-    time = Column(DateTime)
-    date = Column(DateTime)
-    duration = Column(Integer)
-    encounter_type = Column(String)
-    summary = Column(String)
+
+class Sighting(Base):
+    __tablename__ = 'sightings'
+    __table_args__ = (PrimaryKeyConstraint('id'),)
+
+    id = Column(Integer())
+    location = Column(String())
+    time = Column(DateTime())
+    date = Column(DateTime())
+    duration = Column(Integer())
+    encounter_type = Column(String())
+    summary = Column(String())
     truther_id = Column(Integer, ForeignKey('truthers.id'))
     ufo_shape = Column(String, ForeignKey('ufos.shape'))
 
-    def __init__(self, id, location, time, date, duration, encounter_type, summary, truther_id, ufo_shape):
-        self.id = id
-        self.location = location
-        self.time = time
-        self.date = date
-        self.duration = duration
-        self.encounter_type = encounter_type
-        self.summary = summary
-        self.truther_id = truther_id
-        self.ufo_shape = ufo_shape
-
+    def __repr__(self):
+     return f"ID: {self.id}, " \
+            + f"Location: {self.location}, " \
+            + f"Time: {self.time}, " \
+            + f"Date: {self.date}, " \
+            + f"Duration: {self.duration}, " \
+            + f"Encounter Type: {self.encounter_type}, " \
+            + f"Summary: {self.summary}, " \
+            + f"Truther ID: {self.truther_id}, " \
+            + f"UFO Shape: {self.ufo_shape}, " \
 
 
 

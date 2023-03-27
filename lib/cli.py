@@ -1,10 +1,16 @@
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+from db.models import Truther, UFO, Sighting
+from helpers import create_table, create_sighting, create_truther, login
+
 import click
 # from lib.x_cli import tacos
 
-# @click.command()
-# @click.option('--name', '-n', help="Displays user name", required=True)
-# def encounter_counter(name):
-#     print("Hello, " + name + "!")
+#connect with db
+engine = create_engine('sqlite:///encounter_counter.db')
+session = sessionmaker(bind=engine)
+
 
 @click.command()
 @click.option('--func', '-f', help="Runs the requested function", required=True, 
