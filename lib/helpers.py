@@ -1,7 +1,15 @@
 import click
-from db.
+from lib.db.models import (Sighting, Base)
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+engine = create_engine('sqlite:///encounter_counter.db')
+Base.metadata.create_all(engine)
+Session = sessionmaker(bind=engine)
+session = Session()
 
 def main_menu ():
+
     choice = ""
     while choice != 'quit' and choice != 'q':
         print('''
@@ -12,7 +20,7 @@ def main_menu ():
         ''')
 
         if (choice == 'r') or (choice == 'report'):
-            report()
+            report_sighting()
         if (choice == 'p') or (choice == 'profile'):
             profile()
         if (choice == 's') or (choice == 'search'):
@@ -20,7 +28,7 @@ def main_menu ():
 
         choice = click.prompt("Enter selection")
 
-def report():
+def report_sighting():
 
     click.echo("UFO OR UAP ENCOUNTER REPORT")
 
@@ -31,13 +39,13 @@ def report():
 
             click.echo("Please fill out the following form... \n")
 
-            location = click.prompt("Where did the event occur? (City, State): ")
-            time = click.prompt("What time did the event occur? (24-hr clock time): ")
-            date = click.prompt("What was the date? (YYYY-MM-DD)")
-            duration = click.prompt("For how long did the event continue? (min:sec)")
-            encounter_type = click.prompt("What type of encounter did you experience? (sighting, greeting, abduction)")
-            summary = click.prompt("Please enter a brief description of the event")
-            ufo_shape = click.prompt("What shape was the object?: ")
+            input_location = click.prompt("Where did the event occur? (City, State): ")
+            input_time = click.prompt("What time did the event occur? (24-hr clock time): ")
+            input_date = click.prompt("What was the date? (YYYY-MM-DD)")
+            input_duration = click.prompt("For how long did the event continue? (min:sec)")
+            input_encounter_type = click.prompt("What type of encounter did you experience? (sighting, greeting, abduction)")
+            input_summary = click.prompt("Please enter a brief description of the event")
+            input_ufo_shape = click.prompt("What shape was the object?: ")
 
             print(f'''
             ENTERRED VALUES:
@@ -52,11 +60,16 @@ def report():
             ----------------------------------------------
             ''')
 
-            # event = Sighting(location=input_location, time=input_time, date= input_date, duration=input_duration,
-            #                  encounter_type=input_encounter_type, summary=input_summary, ufo_shape=input_ufo_shape)
+            event = Sighting(location=input_location,
+                             time=input_time,
+                             date= input_date,
+                             duration=input_duration,
+                             encounter_type=input_encounter_type,
+                             summary=input_summary,
+                             ufo_shape=input_ufo_shape)
             
-            # session.add(event)
-            # session.commit()
+            session.add(event)
+            session.commit()
 
         elif(choice == 'N') or (choice == 'n'):
             print('Returning to main menu.')

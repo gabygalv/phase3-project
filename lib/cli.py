@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from db.models import Truther, UFO, Sighting
+from lib.db.models import Truther, UFO, Sighting
 from helpers import create_table, create_sighting, create_truther, login
 
 import click
