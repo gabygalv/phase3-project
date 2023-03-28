@@ -1,0 +1,8 @@
+README.md
+setup.py
+encounter_counter.egg-info/PKG-INFO
+encounter_counter.egg-info/SOURCES.txt
+encounter_counter.egg-info/dependency_links.txt
+encounter_counter.egg-info/entry_points.txt
+encounter_counter.egg-info/requires.txt
+encounter_counter.egg-info/top_level.txt

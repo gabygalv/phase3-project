@@ -1,0 +1,2 @@
+[console_scripts]
+encounter = encounter_counter:encounter_counter
