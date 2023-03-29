@@ -83,14 +83,13 @@ def check_encounter_type_valid(string):
 
 def current_user_check(username):
     import ipdb
+
     current_user = session.query(Truther).filter(Truther.username == username)
-    ipdb.set_trace()
-    if len(current_user) != 0 :   
+    if current_user.count() != 0 :   
         print(current_user[0])
         return(current_user[0].id)
-
     else:
-        raise Exception ("I object!")
+        profile(username)
 
     # for row in current_user:
     #     return(row.id)
@@ -171,43 +170,15 @@ def report_sighting():
     print('Returning to main menu.')
     main_menu_text()
 
-def profile():
-    # click.echo("....................................")
-    # choice = ""
-    # while (choice != 'Q') or (choice != 'q'):
-    #     if (choice == 'Y') or (choice == 'y'):
-    #         click.echo("A new Truther! Initiating a profile...")
+def profile(username):
 
-    #         input_username = click.prompt("Select your username", type=str)
-    #         input_base_location = click.prompt("Please enter your base location", type=str)
+    input_username = username
+    input_base_location = click.prompt("Input your base of operations location: ", type=str)
 
-    #         print(f'''
-    #             PROFILE SAVED:
-    #             ----------------------------------------------
-    #                 Username:          ->  {input_username}
-    #                 Base Location:     ->  {input_base_location}
-    #             ----------------------------------------------
-    #             ''')
-    #         new_truther = Truther(username = input_username, 
-    #                             base_location = input_base_location)
-    #         session.add(new_truther)
-    #         session.commit()
-
-    #     elif choice.upper() == "N":
-    #         input_username = click.prompt("Please enter your username to login", type=str)
-    #         current_user_check(input_username)
-    #         choice_deux = click.prompt(f"Welcome back, {input_username}, would you like to report an encounter? (Y/N)", type=str)
-    #         report_sighting() if choice_deux.upper() == Y else choice = 'q'          
-
-        
-    #     elif choice.upper() == "Q":
-    #         click.echo('Returning to main menu...')
-    #         main_menu_text()
-        
-    #     choice = click.prompt("Welcome! Are you new here? (Y/N)")
-    pass
-           
-
+    new_truther = Truther(username = input_username, 
+        base_location = input_base_location)
+    session.add(new_truther)
+    session.commit()
 
 def search():
     # last_encounter = session.query(Sighting).first()
