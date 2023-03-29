@@ -1,6 +1,6 @@
 import click
 import re
-from lib.db.models import (Sighting, Truther, Base)
+from lib.db.models import (Sighting, Truther, UFO, Base)
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -94,6 +94,15 @@ def current_user_check(username):
     # for row in current_user:
     #     return(row.id)
     #return session.query(Truther).filter(Truther.username == username) 
+def check_ufo(new_shape):
+    ufo_shape = session.query(UFO).filter(UFO.shape == new_shape)
+    if ufo_shape.count() != 0:
+        return(ufo_shape[0].shape)
+    else:
+        new_ufo = UFO(shape=new_shape)
+        session.add(new_ufo)
+        session.commit()
+
 
 def report_sighting():
     import ipdb
@@ -149,9 +158,8 @@ def report_sighting():
                 Object Shape:      ->  {input_ufo_shape}
             ----------------------------------------------
             ''')
-
             current_user_check(input_truther)
-            
+            check_ufo(input_ufo_shape)
             # commented out db persistence to work on error handling
             event = Sighting(location=input_location,
                              time=input_time,
@@ -173,7 +181,7 @@ def report_sighting():
 def profile(username):
 
     input_username = username
-    input_base_location = click.prompt("Input your base of operations location: ", type=str)
+    input_base_location = click.prompt("Looks like you're new here, input your base of operations location to create a profile: ", type=str)
 
     new_truther = Truther(username = input_username, 
         base_location = input_base_location)

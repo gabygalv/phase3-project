@@ -47,8 +47,8 @@ class Sighting(Base):
     truther_id = Column(Integer, ForeignKey('truthers.id'))
     ufo_shape = Column(String, ForeignKey('ufos.shape'))
 
-    # truther = relationship('Truther', backref='truthers')
-    # ufo = relationship('UFO', backref='ufos')
+    truther = relationship('Truther', backref='truthers')
+    ufo = relationship('UFO', backref='ufos')
 
     def __repr__(self):
      return f"ID: {self.id}, " \
