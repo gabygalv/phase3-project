@@ -1,6 +1,6 @@
 from sqlalchemy import (PrimaryKeyConstraint, Column, String, Integer, DateTime, ForeignKey)
 from sqlalchemy.ext.declarative import declarative_base
-
+from sqlalchemy.orm import relationship, backref
 
 
 #manages tables
@@ -39,13 +39,16 @@ class Sighting(Base):
 
     id = Column(Integer())
     location = Column(String())
-    time = Column(DateTime())
-    date = Column(DateTime())
+    time = Column(String())
+    date = Column(String())
     duration = Column(Integer())
     encounter_type = Column(String())
     summary = Column(String())
-    truther_id = Column(Integer, ForeignKey('truthers.id'))
+    # truther_id = Column(Integer, ForeignKey('truthers.id'))
     ufo_shape = Column(String, ForeignKey('ufos.shape'))
+
+    # truther = relationship('Truther', backref='truthers')
+    # ufo = relationship('UFO', backref='ufos')
 
     def __repr__(self):
      return f"ID: {self.id}, " \
@@ -55,8 +58,7 @@ class Sighting(Base):
             + f"Duration: {self.duration}, " \
             + f"Encounter Type: {self.encounter_type}, " \
             + f"Summary: {self.summary}, " \
-            + f"Truther ID: {self.truther_id}, " \
-            + f"UFO Shape: {self.ufo_shape}, " \
+            + f"UFO Shape: {self.ufo_shape} " \
 
 
 
