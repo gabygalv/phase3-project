@@ -44,7 +44,8 @@ def check_location_valid(string):
     pattern = r"^[A-z]{2,25},\s[A-Z]{2}$"
     if string == None:
         return False
-    elif build_regex(pattern, string) != None:
+    # elif build_regex(pattern, string) != None:
+    elif(1 == 1):
         return True
     else:
         return False
@@ -54,7 +55,8 @@ def check_time_valid(string):
     pattern = r"^(2[0-3]|[01][0-9]):([0-5][0-9])$"
     if string == None:
         return False
-    elif build_regex(pattern, string) != None:
+    # elif build_regex(pattern, string) != None:
+    elif(1 == 1):
         return True
     else:
         return False
@@ -64,7 +66,8 @@ def check_date_valid(string):
     pattern = r"^[0-9]{4}-(0[1-9]|1[0-2])-(3[0-1]|0[1-9]|[1-2][0-9])$"
     if string == None:
         return False
-    elif build_regex(pattern, string) != None:
+    # elif build_regex(pattern, string) != None:
+    elif(1 == 1):
         return True
     else:
         return False
@@ -72,16 +75,25 @@ def check_date_valid(string):
 def check_encounter_type_valid(string):
     if string == None:
         return False
-    elif (string == "sighting") or (string == "greeting") or (string == "abduction"):
+    # elif (string == "sighting") or (string == "greeting") or (string == "abduction"):
+    elif(1 == 1):
         return True
     else:
         return False
 
 def current_user_check(username):
+    import ipdb
     current_user = session.query(Truther).filter(Truther.username == username)
-    for row in current_user:
-        print(row.id)
-    return isinstance(current_user, Truther)
+    ipdb.set_trace()
+    if len(current_user) != 0 :   
+        print(current_user[0])
+        return(current_user[0].id)
+
+    else:
+        raise Exception ("I object!")
+
+    # for row in current_user:
+    #     return(row.id)
     #return session.query(Truther).filter(Truther.username == username) 
 
 def report_sighting():
@@ -96,6 +108,7 @@ def report_sighting():
 
             click.echo("Please fill out the following form... \n")
 
+            input_truther = None
             input_location = None
             input_time = None
             input_date = None
@@ -103,6 +116,8 @@ def report_sighting():
             input_encounter_type = None
             input_summary = None
             input_ufo_shape = None
+
+            input_truther = click.prompt("Please enter your name", type = str)
 
             while(check_location_valid(input_location) == False):
                 input_location = click.prompt("Where did the event occur? (City, ST): ", type=str)
@@ -125,6 +140,7 @@ def report_sighting():
             print(f'''
             ENTERED VALUES:
             ----------------------------------------------
+                Truther            ->  {input_truther}
                 Location:          ->  {input_location}
                 Time (HH:MM):      ->  {input_time}
                 Date (YYYY-MM-DD:  ->  {input_date}
@@ -134,6 +150,8 @@ def report_sighting():
                 Object Shape:      ->  {input_ufo_shape}
             ----------------------------------------------
             ''')
+
+            current_user_check(input_truther)
             
             # commented out db persistence to work on error handling
             event = Sighting(location=input_location,
@@ -142,7 +160,8 @@ def report_sighting():
                              duration=input_duration,
                              encounter_type=input_encounter_type,
                              summary=input_summary,
-                             ufo_shape=input_ufo_shape)
+                             ufo_shape=input_ufo_shape,
+                             truther_id = current_user_check(input_truther))
             
             session.add(event)
             session.commit()
@@ -153,40 +172,40 @@ def report_sighting():
     main_menu_text()
 
 def profile():
-    click.echo("....................................")
-    choice = ""
-    while (choice != 'Q') or (choice != 'q'):
-        if (choice == 'Y') or (choice == 'y'):
-            click.echo("A new Truther! Initiating a profile...")
+    # click.echo("....................................")
+    # choice = ""
+    # while (choice != 'Q') or (choice != 'q'):
+    #     if (choice == 'Y') or (choice == 'y'):
+    #         click.echo("A new Truther! Initiating a profile...")
 
-            input_username = click.prompt("Select your username", type=str)
-            input_base_location = click.prompt("Please enter your base location", type=str)
+    #         input_username = click.prompt("Select your username", type=str)
+    #         input_base_location = click.prompt("Please enter your base location", type=str)
 
-            print(f'''
-                PROFILE SAVED:
-                ----------------------------------------------
-                    Username:          ->  {input_username}
-                    Base Location:     ->  {input_base_location}
-                ----------------------------------------------
-                ''')
-            # new_truther = Truther(username = input_username, 
-            #                     base_location = input_base_location)
-            # session.add(new_truther)
-            # session.commit()
+    #         print(f'''
+    #             PROFILE SAVED:
+    #             ----------------------------------------------
+    #                 Username:          ->  {input_username}
+    #                 Base Location:     ->  {input_base_location}
+    #             ----------------------------------------------
+    #             ''')
+    #         new_truther = Truther(username = input_username, 
+    #                             base_location = input_base_location)
+    #         session.add(new_truther)
+    #         session.commit()
 
-        elif choice.upper() == "N":
-            input_username = click.prompt("Please enter your username to login", type=str)
-            current_user_check(input_username)
-            click.prompt(f"Welcome back, {input_username}, would you like to report an encounter? (Y/N)", type=str)
-            report_sighting() if choice.upper() == Y else main_menu_text()
-            
+    #     elif choice.upper() == "N":
+    #         input_username = click.prompt("Please enter your username to login", type=str)
+    #         current_user_check(input_username)
+    #         choice_deux = click.prompt(f"Welcome back, {input_username}, would you like to report an encounter? (Y/N)", type=str)
+    #         report_sighting() if choice_deux.upper() == Y else choice = 'q'          
 
         
-        elif choice.upper() == "Q":
-            click.echo('Returning to main menu...')
-            main_menu_text()
+    #     elif choice.upper() == "Q":
+    #         click.echo('Returning to main menu...')
+    #         main_menu_text()
         
-        choice = click.prompt("Welcome! Are you new here? (Y/N)")
+    #     choice = click.prompt("Welcome! Are you new here? (Y/N)")
+    pass
            
 
 

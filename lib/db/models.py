@@ -52,6 +52,7 @@ class Sighting(Base):
 
     def __repr__(self):
      return f"ID: {self.id}, " \
+            + f"Truther ID: {self.truther_id}, " \
             + f"Location: {self.location}, " \
             + f"Time: {self.time}, " \
             + f"Date: {self.date}, " \
@@ -64,5 +65,5 @@ class Sighting(Base):
 
 
 
-# + f"Truther ID: {self.truther_id}, " \
+
     
