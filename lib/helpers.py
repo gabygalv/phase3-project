@@ -147,7 +147,7 @@ def report_form():
             Object Shape:      ->  {input_ufo_shape}
         ----------------------------------------------
     ''')
-
+    check_ufo(input_ufo_shape)
     event = Sighting(location=input_location,
                      time=input_time,
                      date= input_date,
