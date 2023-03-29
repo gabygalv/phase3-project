@@ -39,8 +39,8 @@ class Sighting(Base):
 
     id = Column(Integer())
     location = Column(String())
-    time = Column(String())
-    date = Column(String())
+    time = Column(String()) #changed DateTime to String
+    date = Column(String()) # """"""""""""""
     duration = Column(Integer())
     encounter_type = Column(String())
     summary = Column(String())
@@ -58,8 +58,8 @@ class Sighting(Base):
             + f"Duration: {self.duration}, " \
             + f"Encounter Type: {self.encounter_type}, " \
             + f"Summary: {self.summary}, " \
-            + f"UFO Shape: {self.ufo_shape} " \
+            + f"UFO Shape: {self.ufo_shape}, " \
 
 
-
+# + f"Truther ID: {self.truther_id}, " \
     
