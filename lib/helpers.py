@@ -1,5 +1,4 @@
 import click
-import re
 from lib.db.models import (Sighting, Truther, Base)
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -12,7 +11,6 @@ session = Session()
 def main_menu_text():
     print('''
             [report  (r)]  : Report a UFO or UAP sighting. (requires login)
-            [profile (p)]  : Create a profile/login. 
             [search  (s)]  : Search the Encounter Counter database.
             [quit    (q)]  : Exit Encounter Counter.
         ''')
@@ -28,12 +26,10 @@ def main_menu ():
 
     choice = ""
     main_menu_text()
-    while choice != 'quit' and choice != 'q':        
 
+    while choice != 'quit' and choice != 'q':
         if (choice == 'r') or (choice == 'report'):
             report_sighting()
-        if (choice == 'p') or (choice == 'profile'):
-            profile()
         if (choice == 's') or (choice == 'search'):
             search()
 
@@ -95,6 +91,65 @@ def current_user_check(username):
     #     return(row.id)
     #return session.query(Truther).filter(Truther.username == username) 
 
+def report_form():
+
+    click.echo("Please fill out the following form... \n")
+
+    input_truther = None
+    input_location = None
+    input_time = None
+    input_date = None
+    input_duration = None
+    input_encounter_type = None
+    input_summary = None
+    input_ufo_shape = None
+
+    input_truther = click.prompt("Please enter your name", type = str)
+    
+    while(check_location_valid(input_location) == False):
+        input_location = click.prompt("Where did the event occur? (City, ST) ", type=str)
+
+    while(check_time_valid(input_time) == False):
+        input_time = click.prompt("What time did the event occur? (24-hr clock time) ", type=str)
+
+    while(check_date_valid(input_date) == False):
+        input_date = click.prompt("What was the date? (YYYY-MM-DD)", type=str)
+
+    input_duration = click.prompt("For how long did the event continue? (sec)", type=int)
+
+    while(check_encounter_type_valid(input_encounter_type) == False):
+        input_encounter_type = click.prompt("What type of encounter did you experience? (sighting, greeting, abduction)", type=str)
+
+    input_summary = click.prompt("Please enter a brief description of the event", type=str)
+
+    input_ufo_shape = click.prompt("What shape was the object? ", type=str)
+
+    print(f'''
+        ENTERED VALUES:
+        ----------------------------------------------
+            Name:              ->  {input_truther}
+            Location:          ->  {input_location}
+            Time (HH:MM):      ->  {input_time}
+            Date (YYYY-MM-DD:  ->  {input_date}
+            Duration (MM:SS):  ->  {input_duration}
+            Encounter Type:    ->  {input_encounter_type}
+            Summary:           ->  {input_summary}
+            Object Shape:      ->  {input_ufo_shape}
+        ----------------------------------------------
+    ''')
+
+    event = Sighting(location=input_location,
+                     time=input_time,
+                     date= input_date,
+                     duration=input_duration,
+                     encounter_type=input_encounter_type,
+                     summary=input_summary,
+                     ufo_shape=input_ufo_shape,
+                     truther_id = current_user_check(input_truther))
+            
+    session.add(event)
+    session.commit()
+
 def report_sighting():
     import ipdb
 
@@ -104,66 +159,7 @@ def report_sighting():
     while (choice != "N") and (choice !="n"):
 
         if (choice == 'Y') or (choice == 'y'):
-
-            click.echo("Please fill out the following form... \n")
-
-            input_truther = None
-            input_location = None
-            input_time = None
-            input_date = None
-            input_duration = None
-            input_encounter_type = None
-            input_summary = None
-            input_ufo_shape = None
-
-            input_truther = click.prompt("Please enter your name", type = str)
-
-            while(check_location_valid(input_location) == False):
-                input_location = click.prompt("Where did the event occur? (City, ST): ", type=str)
-            
-            while(check_time_valid(input_time) == False):
-                input_time = click.prompt("What time did the event occur? (24-hr clock time): ", type=str)
-
-            while(check_date_valid(input_date) == False):
-                input_date = click.prompt("What was the date? (YYYY-MM-DD)", type=str)
-
-            input_duration = click.prompt("For how long did the event continue? (sec)", type=int)
-
-            while(check_encounter_type_valid(input_encounter_type) == False):
-                input_encounter_type = click.prompt("What type of encounter did you experience? (sighting, greeting, abduction)", type=str)
-
-            input_summary = click.prompt("Please enter a brief description of the event", type=str)
-
-            input_ufo_shape = click.prompt("What shape was the object?: ", type=str)
-
-            print(f'''
-            ENTERED VALUES:
-            ----------------------------------------------
-                Truther            ->  {input_truther}
-                Location:          ->  {input_location}
-                Time (HH:MM):      ->  {input_time}
-                Date (YYYY-MM-DD:  ->  {input_date}
-                Duration (MM:SS):  ->  {input_duration}
-                Encounter Type:    ->  {input_encounter_type}
-                Summary:           ->  {input_summary}
-                Object Shape:      ->  {input_ufo_shape}
-            ----------------------------------------------
-            ''')
-
-            current_user_check(input_truther)
-            
-            # commented out db persistence to work on error handling
-            event = Sighting(location=input_location,
-                             time=input_time,
-                             date= input_date,
-                             duration=input_duration,
-                             encounter_type=input_encounter_type,
-                             summary=input_summary,
-                             ufo_shape=input_ufo_shape,
-                             truther_id = current_user_check(input_truther))
-            
-            session.add(event)
-            session.commit()
+            report_form()
 
         choice = click.prompt("Report Encounter? (Y/N): ")
 
@@ -177,6 +173,7 @@ def profile(username):
 
     new_truther = Truther(username = input_username, 
         base_location = input_base_location)
+
     session.add(new_truther)
     session.commit()
 
@@ -187,7 +184,6 @@ def search():
     # query = session.query(Sighting).filter(Sighting.id == "1").all()
 
     click.echo('What records are you looking for?')
-    # click.echo(last_encounter)
     click.prompt('''
             [Date     (1)]  : View by date
             [Location (2)]  : View by location
