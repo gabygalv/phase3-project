@@ -44,7 +44,7 @@ class Sighting(Base):
     duration = Column(Integer())
     encounter_type = Column(String())
     summary = Column(String())
-    # truther_id = Column(Integer, ForeignKey('truthers.id'))
+    truther_id = Column(Integer, ForeignKey('truthers.id'))
     ufo_shape = Column(String, ForeignKey('ufos.shape'))
 
     # truther = relationship('Truther', backref='truthers')
@@ -59,6 +59,9 @@ class Sighting(Base):
             + f"Encounter Type: {self.encounter_type}, " \
             + f"Summary: {self.summary}, " \
             + f"UFO Shape: {self.ufo_shape}, " \
+            
+    # @classmethod
+
 
 
 # + f"Truther ID: {self.truther_id}, " \
