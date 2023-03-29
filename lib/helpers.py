@@ -50,6 +50,13 @@ def check_summary_valid(string):
 def check_ufo_shape_valid(string):
     pass
 
+def current_user_check(username):
+    current_user = session.query(Truther).filter(Truther.username == username)
+    for row in current_user:
+        print(row.id)
+    return isinstance(current_user, Truther)
+    #return session.query(Truther).filter(Truther.username == username) 
+
 def report_sighting():
 
     click.echo("UFO OR UAP ENCOUNTER REPORT")
@@ -69,15 +76,15 @@ def report_sighting():
             input_summary = None
             input_ufo_shape = None
 
-            while(check_location_valid(input_location) == False):
-                input_location = click.prompt("Where did the event occur? (City, ST): ", type=str)
+            #while(check_location_valid(input_location) == False):
+            input_location = click.prompt("Where did the event occur? (City, ST)", type=str)
 
-            input_time = click.prompt("What time did the event occur? (24-hr clock time): ", type=str)
+            input_time = click.prompt("What time did the event occur? (24-hr clock time)", type=str)
             input_date = click.prompt("What was the date? (YYYY-MM-DD)", type=str)
             input_duration = click.prompt("For how long did the event continue? (sec)", type=int)
             input_encounter_type = click.prompt("What type of encounter did you experience? (sighting, greeting, abduction)", type=str)
             input_summary = click.prompt("Please enter a brief description of the event", type=str)
-            input_ufo_shape = click.prompt("What shape was the object?: ", type=str)
+            input_ufo_shape = click.prompt("What shape was the object?", type=str)
 
             print(f'''
             ENTERED VALUES:
@@ -93,18 +100,18 @@ def report_sighting():
             ''')
             
             # commented out db persistence to work on error handling
-            # event = Sighting(location=input_location,
-            #                  time=input_time,
-            #                  date= input_date,
-            #                  duration=input_duration,
-            #                  encounter_type=input_encounter_type,
-            #                  summary=input_summary,
-            #                  ufo_shape=input_ufo_shape)
+            event = Sighting(location=input_location,
+                             time=input_time,
+                             date= input_date,
+                             duration=input_duration,
+                             encounter_type=input_encounter_type,
+                             summary=input_summary,
+                             ufo_shape=input_ufo_shape)
             
-            # session.add(event)
-            # session.commit()
+            session.add(event)
+            session.commit()
 
-        choice = click.prompt("Report Encounter? (Y/N): ")
+        choice = click.prompt("Report Encounter? (Y/N)")
         print('Returning to main menu.')
         main_menu_text()
 
@@ -125,16 +132,22 @@ def profile():
                     Base Location:     ->  {input_base_location}
                 ----------------------------------------------
                 ''')
-            new_truther = Truther(username = input_username, 
-                                base_location = input_base_location)
-            session.add(new_truther)
-            session.commit()
+            # new_truther = Truther(username = input_username, 
+            #                     base_location = input_base_location)
+            # session.add(new_truther)
+            # session.commit()
 
         elif choice.upper() == "N":
-            input_username = click.prompt("Please enter your username to login:", type=str)
-            current_truther = input_username
+            input_username = click.prompt("Please enter your username to login", type=str)
+            current_user_check(input_username)
+            click.prompt(f"Welcome back, {input_username}, would you like to report an encounter? (Y/N)", type=str)
+            report_sighting() if choice.upper() == Y else main_menu_text()
+            
+
+        
         elif choice.upper() == "Q":
             click.echo('Returning to main menu...')
+            main_menu_text()
         
         choice = click.prompt("Welcome! Are you new here? (Y/N)")
            
