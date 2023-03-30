@@ -52,13 +52,13 @@ class Sighting(Base):
 
     def __repr__(self):
      return f"ID: {self.id}, " \
-            + f"Truther ID: {self.truther_id}, " \
             + f"Location: {self.location}, " \
             + f"Time: {self.time}, " \
             + f"Date: {self.date}, " \
             + f"Duration: {self.duration}, " \
             + f"Encounter Type: {self.encounter_type}, " \
             + f"Summary: {self.summary}, " \
+            + f"Truther ID: {self.truther_id}, " \
             + f"UFO Shape: {self.ufo_shape}, " \
             
     # @classmethod

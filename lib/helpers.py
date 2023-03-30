@@ -1,5 +1,4 @@
 import click
-from lib.db.models import (Sighting, Truther, Base)
 import re
 from lib.db.models import (Sighting, Truther, UFO, Base)
 from sqlalchemy import create_engine
@@ -11,11 +10,15 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 def main_menu_text():
-    print('''
-            [report  (r)]  : Report a UFO or UAP sighting. (requires login)
-            [search  (s)]  : Search the Encounter Counter database.
-            [quit    (q)]  : Exit Encounter Counter.
-        ''')
+    click.echo('''
+        .__________________.
+        |  Main Menu       |
+        |__________________|
+        |  report     (r)  |
+        |  search     (s)  |
+        |  quit       (q)  |       
+        |__________________|
+         ''')
 
 def build_regex(pattern, string):
 
@@ -37,7 +40,24 @@ def main_menu ():
 
         choice = click.prompt("Enter selection")
 
-def check_location_valid(string):
+def view_report(name, loc, time, date, dur, enc, summ, obj):
+    
+    print(f'''
+        ._____________________________________________ __ __ _ _ _ _    
+        |    ENCOUNTER REPORT
+        |_____________________________________________ __ __ _ _ _ _
+        |    Name:              ->  {name}
+        |    Location:          ->  {loc}
+        |    Time (HH:MM):      ->  {time}
+        |    Date (YYYY-MM-DD:  ->  {date}
+        |    Duration (MM:SS):  ->  {dur}
+        |    Encounter Type:    ->  {enc}
+        |    Summary:           ->  {summ}
+        |    Object Shape:      ->  {obj}
+        |___________________________________________ ___ ___ _ _ _ _
+    ''')
+
+def verify_location(string):
     
     pattern = r"^[A-z]{2,25},\s[A-Z]{2}$"
     if string == None:
@@ -48,7 +68,7 @@ def check_location_valid(string):
     else:
         return False
 
-def check_time_valid(string):
+def verify_time(string):
 
     pattern = r"^(2[0-3]|[01][0-9]):([0-5][0-9])$"
     if string == None:
@@ -59,7 +79,7 @@ def check_time_valid(string):
     else:
         return False
 
-def check_date_valid(string):
+def verify_date(string):
     #accepts a string as follows [any 4 digits]-[2 dig number between 1-12]-[2 dig number between 01 and 31]
     pattern = r"^[0-9]{4}-(0[1-9]|1[0-2])-(3[0-1]|0[1-9]|[1-2][0-9])$"
     if string == None:
@@ -70,7 +90,7 @@ def check_date_valid(string):
     else:
         return False
 
-def check_encounter_type_valid(string):
+def verify_encounter_type(string):
     if string == None:
         return False
     # elif (string == "sighting") or (string == "greeting") or (string == "abduction"):
@@ -79,19 +99,37 @@ def check_encounter_type_valid(string):
     else:
         return False
 
+def verify_ufo_shape(string):
+
+    if string == '-o':
+
+        print('''
+        .______________________________________________.
+        |  SUGESTIONS                                  |
+        | _____________________________________________|       
+        |  circle      disc        fireball   pill     |
+        |  light       triangle    sphere     cube     |
+        |  pyramid     flash       cylinder   unknown  |
+        |______________________________________________|  
+
+        ''')
+        return False
+    elif string == None:
+        return False
+
+    return True
+
+
 def current_user_check(username):
-    import ipdb
 
     current_user = session.query(Truther).filter(Truther.username == username)
-    if current_user.count() != 0 :   
-        print(current_user[0])
+    if current_user.count() != 0 :
         return(current_user[0].id)
     else:
         profile(username)
+        current_user = session.query(Truther).filter(Truther.username == username)
+        return(current_user[0].id)
 
-    # for row in current_user:
-    #     return(row.id)
-    #return session.query(Truther).filter(Truther.username == username) 
 def check_ufo(new_shape):
     ufo_shape = session.query(UFO).filter(UFO.shape == new_shape)
     if ufo_shape.count() != 0:
@@ -116,38 +154,51 @@ def report_form():
 
     input_truther = click.prompt("Please enter your name", type = str)
     
-    while(check_location_valid(input_location) == False):
+    while(verify_location(input_location) == False):
         input_location = click.prompt("Where did the event occur? (City, ST) ", type=str)
 
-    while(check_time_valid(input_time) == False):
+    while(verify_time(input_time) == False):
         input_time = click.prompt("What time did the event occur? (24-hr clock time) ", type=str)
 
-    while(check_date_valid(input_date) == False):
+    while(verify_date(input_date) == False):
         input_date = click.prompt("What was the date? (YYYY-MM-DD)", type=str)
 
     input_duration = click.prompt("For how long did the event continue? (sec)", type=int)
 
-    while(check_encounter_type_valid(input_encounter_type) == False):
+    while(verify_encounter_type(input_encounter_type) == False):
         input_encounter_type = click.prompt("What type of encounter did you experience? (sighting, greeting, abduction)", type=str)
 
     input_summary = click.prompt("Please enter a brief description of the event", type=str)
 
-    input_ufo_shape = click.prompt("What shape was the object? ", type=str)
+    while(verify_ufo_shape(input_ufo_shape) == False):
+        input_ufo_shape = click.prompt("What shape was the object? (-o to view suggestions)", type=str)
 
-    print(f'''
-        ENTERED VALUES:
-        ----------------------------------------------
-            Name:              ->  {input_truther}
-            Location:          ->  {input_location}
-            Time (HH:MM):      ->  {input_time}
-            Date (YYYY-MM-DD:  ->  {input_date}
-            Duration (MM:SS):  ->  {input_duration}
-            Encounter Type:    ->  {input_encounter_type}
-            Summary:           ->  {input_summary}
-            Object Shape:      ->  {input_ufo_shape}
-        ----------------------------------------------
-    ''')
+    choice = None
+
+    while(choice not in ['d', 'D', 'done']):
+
+        click.echo('''
+        .__________________.
+        |  Report Created  |
+        |__________________|
+        |  view       (v)  |
+        |  done       (d)  |       
+        |__________________|
+        ''')
+
+        choice = click.prompt("View report?")
+
+        if choice in ['v','V', 'view']:
+
+            view_report(input_truther, input_location,
+                        input_time, input_date, input_duration,
+                        input_encounter_type, input_summary,
+                        input_ufo_shape)
+
+        choice = 'd'
+
     check_ufo(input_ufo_shape)
+
     event = Sighting(location=input_location,
                      time=input_time,
                      date= input_date,
@@ -161,7 +212,6 @@ def report_form():
     session.commit()
 
 def report_sighting():
-    import ipdb
 
     click.echo("UFO OR UAP ENCOUNTER REPORT")
 
@@ -171,7 +221,7 @@ def report_sighting():
         if (choice == 'Y') or (choice == 'y'):
             report_form()
 
-        choice = click.prompt("Report Encounter? (Y/N): ")
+        choice = click.prompt("Report New Encounter? (Y/N) ")
 
     print('Returning to main menu.')
     main_menu_text()
