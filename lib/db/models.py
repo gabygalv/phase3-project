@@ -29,8 +29,9 @@ class UFO(Base):
     shape = Column(String())
 
     def __repr__(self):
-     return f"ID: {self.id}," \
-            + f"Shape: {self.shape}," \
+     return f"ID: {self.id}, \n" \
+            + f"Shape: {self.shape}, \n" \
+            + "\n"
 
 
 class Sighting(Base):
@@ -51,15 +52,16 @@ class Sighting(Base):
     ufo = relationship('UFO', backref='ufos')
 
     def __repr__(self):
-     return f"ID: {self.id}, " \
-            + f"Location: {self.location}, " \
-            + f"Time: {self.time}, " \
-            + f"Date: {self.date}, " \
-            + f"Duration: {self.duration}, " \
-            + f"Encounter Type: {self.encounter_type}, " \
-            + f"Summary: {self.summary}, " \
-            + f"Truther ID: {self.truther_id}, " \
-            + f"UFO Shape ID: {self.ufo_id}, " \
+     return f"ID: {self.id}, \n" \
+            + f"Location: {self.location}, \n" \
+            + f"Time: {self.time}, \n" \
+            + f"Date: {self.date}, \n" \
+            + f"Duration: {self.duration}, \n" \
+            + f"Encounter Type: {self.encounter_type}, \n" \
+            + f"Summary: {self.summary}, \n" \
+            + f"Truther ID: {self.truther_id}, \n" \
+            + f"UFO Shape ID: {self.ufo_id} \n" \
+            + "***************** \n"
             
     # @classmethod
 

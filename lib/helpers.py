@@ -247,17 +247,45 @@ def search():
     # locations = session.query(Sighting.location)
     # by_date = session.query(Sighting).order_by(Sighting.date)
     # query = session.query(Sighting).filter(Sighting.id == "1").all()
-
+    choice = ''
     click.echo('What records are you looking for?')
-    click.prompt('''
-            [Date     (1)]  : View by date
-            [Location (2)]  : View by location
-            [UFO      (3)]  : View by UFO type
-            [Encounter(4)]  : View by encounter type
-            [Recent   (5)]  : Find most recently reported sighting
-            [Common   (6)]  : Find most commonly reported UFO
-            [Truthiest(7)]  : Find Truther with most encounters
+    choice = click.prompt('''
+            [Date     (1)]  : View 10 oldest encounters
+            [Year     (2)]  : View encounters by specified year
+            [Location (3)]  : View by location
+            [UFO      (4)]  : View by UFO type
+            [Encounter(5)]  : View by encounter type
+            [Recent   (6)]  : Find most recently reported sighting
+            [Common   (7)]  : Find most commonly reported UFO
+            [Truthiest(8)]  : Find Truther with most encounters
     ''')
+    if choice == '1':
+        by_date=session.query(Sighting).order_by(Sighting.date).limit(10).all()
+        click.echo([date for date in by_date])
+    elif choice == '2':
+         input_year = click.prompt("Enter the year you want to find encounters in")
+         by_year=session.query(Sighting).filter(Sighting.date.contains(input_year))
+         if by_year.count() != 0:
+            click.echo([year for year in by_year])
+         else:
+            click.echo(f"No encounters reported in {input_year}")
+    elif choice == '3':
+        input_location = click.prompt("Enter the location you want to find encounters in")
+        by_location=session.query(Sighting).filter(Sighting.location.contains(input_location))
+        if by_location.count() != 0:
+            click.echo([location for location in by_location])
+        else:
+            click.echo(f"No encounters reported in {input_location}")
+    elif choice == '4':
+        pass
+    elif choice == '5':
+        input_encounter = click.prompt("Enter one of the following encounter types to search for: sighting, greeting, abduction)")
+        by_type = session.query(Sighting).filter(Sighting.encounter_type.contains(input_encounter.capitalize()))
+        click.echo([type for type in by_type])
+    elif choice == '6':
+        pass
+    elif choice == '7':
+        pass
     
    
 
