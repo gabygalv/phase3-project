@@ -12,7 +12,7 @@ session = Session()
 def main_menu_text():
     click.echo('''
         .__________________.
-        |  Report Created  |
+        |  Main Menu       |
         |__________________|
         |  report     (r)  |
         |  search     (s)  |
@@ -105,7 +105,7 @@ def verify_ufo_shape(string):
 
         print('''
         .______________________________________________.
-        |  SUGESTIONS:                                 |
+        |  SUGESTIONS                                  |
         | _____________________________________________|       
         |  circle      disc        fireball   pill     |
         |  light       triangle    sphere     cube     |
