@@ -13,9 +13,9 @@ if __name__ == '__main__':
     session = Session()
 
     # uncomment to delete data from the tables
-    # session.query(Sighting).delete()
-    # session.query(Truther).delete()
-    # session.query(UFO).delete()
+    session.query(Sighting).delete()
+    session.query(Truther).delete()
+    session.query(UFO).delete()
 
     faker = Faker()
 
@@ -145,13 +145,13 @@ if __name__ == '__main__':
         sighting = Sighting(
 
             location=f"{faker.city()} {faker.country_code()}",
-            time=f"{random.randint(0, 23)}:{random.randint(0, 59)}",
+            time=f"{random.randint(0, 23):02d}:{random.randint(0, 59):02d}",
             date=faker.date(),
             duration=random.randint(0, 99),
             encounter_type=random.choice(encounter_type),
             summary=random.choice(ufo_summaries),
             truther_id=random.randint(1, 40),
-            ufo_shape=random.choice(ufo_shape)
+            ufo_id=random.randint(1, 8)
             )
         session.add(sighting)
         session.commit()

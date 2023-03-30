@@ -140,7 +140,7 @@ def verify_ufo_shape(string):
     return True
 
 
-def current_user_check(username):
+def check_if_new_user(username):
 
     current_user = session.query(Truther).filter(Truther.username == username)
     if current_user.count() != 0 :
@@ -150,14 +150,17 @@ def current_user_check(username):
         current_user = session.query(Truther).filter(Truther.username == username)
         return(current_user[0].id)
 
-def check_ufo(new_shape):
+def check_if_new_ufo(new_shape):
     ufo_shape = session.query(UFO).filter(UFO.shape == new_shape)
     if ufo_shape.count() != 0:
-        return(ufo_shape[0].shape)
+        return(ufo_shape[0].id)
     else:
         new_ufo = UFO(shape=new_shape)
         session.add(new_ufo)
         session.commit()
+
+        ufo_shape = session.query(UFO).filter(UFO.shape == new_shape)
+        return(ufo_shape[0].id)        
 
 def report_form():
 
@@ -193,8 +196,8 @@ def report_form():
     while(verify_ufo_shape(input_ufo_shape) == False):
         input_ufo_shape = click.prompt("What shape was the object? (-o to view suggestions)", type=str)
     
-    check_ufo(input_ufo_shape)
-    input_truther_id = current_user_check(input_truther)
+    input_ufo_id = check_if_new_ufo(input_ufo_shape)
+    input_truther_id = check_if_new_user(input_truther)
 
     event = Sighting(location=input_location,
                      time=input_time,
@@ -202,7 +205,7 @@ def report_form():
                      duration=input_duration,
                      encounter_type=input_encounter_type,
                      summary=input_summary,
-                     ufo_shape=input_ufo_shape,
+                     ufo_id=input_ufo_id,
                      truther_id = input_truther_id)
             
     session.add(event)

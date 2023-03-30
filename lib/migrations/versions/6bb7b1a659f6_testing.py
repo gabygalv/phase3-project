@@ -40,7 +40,7 @@ def upgrade() -> None:
     sa.Column('truther_id', sa.Integer(), nullable=True),
     sa.Column('ufo_shape', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['truther_id'], ['truthers.id'], ),
-    sa.ForeignKeyConstraint(['ufo_shape'], ['ufos.shape'], ),
+    sa.ForeignKeyConstraint(['ufo_id'], ['ufos.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###

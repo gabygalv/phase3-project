@@ -39,13 +39,13 @@ class Sighting(Base):
 
     id = Column(Integer())
     location = Column(String())
-    time = Column(String()) #changed DateTime to String
-    date = Column(String()) # """"""""""""""
+    time = Column(String())
+    date = Column(String())
     duration = Column(Integer())
     encounter_type = Column(String())
     summary = Column(String())
     truther_id = Column(Integer, ForeignKey('truthers.id'))
-    ufo_shape = Column(String, ForeignKey('ufos.shape'))
+    ufo_id = Column(Integer, ForeignKey('ufos.id'))
 
     truther = relationship('Truther', backref='truthers')
     ufo = relationship('UFO', backref='ufos')
@@ -59,7 +59,7 @@ class Sighting(Base):
             + f"Encounter Type: {self.encounter_type}, " \
             + f"Summary: {self.summary}, " \
             + f"Truther ID: {self.truther_id}, " \
-            + f"UFO Shape: {self.ufo_shape}, " \
+            + f"UFO Shape ID: {self.ufo_id}, " \
             
     # @classmethod
 
