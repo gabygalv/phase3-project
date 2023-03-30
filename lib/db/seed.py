@@ -4,10 +4,11 @@ import random
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from models import Sighting, Truther, UFO
+from models import Sighting, Truther, UFO, Base
 
 if __name__ == '__main__':
     engine = create_engine('sqlite:///encounter_counter.db')
+    Base.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)
     session = Session()
 
@@ -130,7 +131,7 @@ if __name__ == '__main__':
         truther = Truther(
 
             username=random.choice(usernames),
-            location=f"{faker.city()} {faker.country_code()}"
+            base_location=f"{faker.city()} {faker.country_code()}"
         )
         session.add(truther)
         session.commit()
@@ -149,10 +150,22 @@ if __name__ == '__main__':
             duration=random.randint(0, 99),
             encounter_type=random.choice(encounter_type),
             summary=random.choice(ufo_summaries),
-            truther_id=random.choice(truthers).id
+            truther_id=random.randint(1, 40),
+            ufo_shape=random.choice(ufo_shape)
             )
         session.add(sighting)
         session.commit()
 
         sightings.append(sighting)
+    
+    ufos = []
 
+    for shape in ufo_shape:
+
+        ufo = UFO(
+            shape=shape
+        )
+        session.add(ufo)
+        session.commit()
+
+        ufos.append(ufo)
