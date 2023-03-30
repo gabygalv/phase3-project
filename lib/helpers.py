@@ -40,6 +40,26 @@ def main_menu ():
 
         choice = click.prompt("Enter selection")
 
+def view_report_menu(name, loc, time, date, dur, enc, summ, obj):
+
+    choice = None
+    while(choice not in ['d', 'D', 'done']):
+        click.echo('''
+        .__________________.
+        |  Report Created  |
+        |__________________|
+        |  view       (v)  |
+        |  done       (d)  |       
+        |__________________|
+        ''')
+        choice = click.prompt("View report?")
+
+        if choice in ['v','V', 'view']:
+
+            view_report(name, loc, time, date, dur, enc, summ, obj)      
+
+        choice = 'd'
+
 def view_report(name, loc, time, date, dur, enc, summ, obj):
     
     print(f'''
@@ -172,32 +192,9 @@ def report_form():
 
     while(verify_ufo_shape(input_ufo_shape) == False):
         input_ufo_shape = click.prompt("What shape was the object? (-o to view suggestions)", type=str)
-
-    choice = None
-
-    while(choice not in ['d', 'D', 'done']):
-
-        click.echo('''
-        .__________________.
-        |  Report Created  |
-        |__________________|
-        |  view       (v)  |
-        |  done       (d)  |       
-        |__________________|
-        ''')
-
-        choice = click.prompt("View report?")
-
-        if choice in ['v','V', 'view']:
-
-            view_report(input_truther, input_location,
-                        input_time, input_date, input_duration,
-                        input_encounter_type, input_summary,
-                        input_ufo_shape)
-
-        choice = 'd'
-
+    
     check_ufo(input_ufo_shape)
+    input_truther_id = current_user_check(input_truther)
 
     event = Sighting(location=input_location,
                      time=input_time,
@@ -206,10 +203,15 @@ def report_form():
                      encounter_type=input_encounter_type,
                      summary=input_summary,
                      ufo_shape=input_ufo_shape,
-                     truther_id = current_user_check(input_truther))
+                     truther_id = input_truther_id)
             
     session.add(event)
     session.commit()
+
+    view_report_menu(input_truther, input_location,
+                     input_time, input_date, input_duration,
+                     input_encounter_type, input_summary,
+                     input_ufo_shape)
 
 def report_sighting():
 
