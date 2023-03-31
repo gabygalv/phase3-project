@@ -53,6 +53,7 @@ class Sighting(Base):
     ufo = relationship('UFO', backref='ufos')
 
     def __repr__(self):
+
         x = PrettyTable()
         x.field_names = ("Encounter Report", "")
         x.add_rows(
@@ -82,8 +83,7 @@ class Sighting(Base):
     #         + "***************** \n"
     #         # + f"Truther ID: {self.truther_id}, \n" \
     #         # + f"UFO Shape ID: {self.ufo_id} \n" \
-            
-    # # @classmethod
+
 
 
 

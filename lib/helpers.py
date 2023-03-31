@@ -120,7 +120,7 @@ def verify_ufo_shape(string):
 
         print('''
         .______________________________________________.
-        |  SUGESTIONS                                  |
+        |  SUGGESTIONS                                  |
         | _____________________________________________|       
         |  circle      disc        fireball   pill     |
         |  light       triangle    sphere     cube     |
