@@ -1,5 +1,8 @@
 import click
 import re
+import time
+from prettytable import PrettyTable
+
 from lib.db.models import (Sighting, Truther, UFO, Base)
 from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
@@ -57,25 +60,25 @@ def view_report_menu(name, loc, time, date, dur, enc, summ, obj):
         choice = 'd'
 
 def view_report(name, loc, time, date, dur, enc, summ, obj):
-    
-    print(f'''
-        ._____________________________________________ __ __ _ _ _ _    
-        |    ENCOUNTER REPORT
-        |_____________________________________________ __ __ _ _ _ _
-        |    Name:              ->  {name}
-        |    Location:          ->  {loc}
-        |    Time (HH:MM):      ->  {time}
-        |    Date (YYYY-MM-DD:  ->  {date}
-        |    Duration (MM:SS):  ->  {dur}
-        |    Encounter Type:    ->  {enc}
-        |    Summary:           ->  {summ}
-        |    Object Shape:      ->  {obj}
-        |___________________________________________ ___ ___ _ _ _ _
-    ''')
+
+    x = PrettyTable()
+    x.field_names = ["Question", "Response"]
+    x.add_rows(
+        [
+            ['Name', name],
+            ['Location', loc],
+            ['Time', time],
+            ['Duration (sec)', dur],
+            ['Encounter Type', enc],
+            ['Summary', summ],
+            ['Object Shape', obj]
+        ]
+    )
+    print(x)
 
 def verify_location(string):
     
-    pattern = r"^[A-z]{2,25},\s[A-Z]{2}$"
+    pattern = r"^([A-z]|\s){2,25},\s[A-Z]{2}$"
     if string == None:
         return False
     elif build_regex(pattern, string) != None:
@@ -309,19 +312,28 @@ def search_truthiest():
     ''')
 
 def search_menu_text ():
-    click.echo('''
-            [Date     (1)]  : View 10 oldest encounters
-            [Year     (2)]  : View encounters by specified year
-            [Location (3)]  : View by location
-            [UFO      (4)]  : View by UFO type
-            [Encounter(5)]  : View by encounter type
-            [Recent   (6)]  : Find most recently reported sighting
-            [Common   (7)]  : Find most commonly reported UFO
-            [Truthiest(8)]  : Find Truther with most encounters
-            [Quit     (q)]  : Return to the main menu.
-        ''')
+
+    x = PrettyTable()
+
+    x.field_names = ["Options", ""]
+    x.add_rows(
+        [
+            ["Date     (1)", "View 10 oldest encounters"],
+            ["Year     (2)", "View encounters by specified year"],
+            ["Location (3)", "View by location"],
+            ["UFO      (4)", "View by UFO type"],
+            ["Encounter(5)", "View by encounter type"],
+            ["Recent   (6)", "Find most recently reported sighting"],
+            ["Common   (7)", "Find most commonly reported UFO"],
+            ["Truthiest(8)", "Find Truther with most encounters"],
+            ["Quit     (q)", "Return to the main menu"]
+        ]
+    )
+    print(x)
 
 def search():
+
+    click.echo('Initializing new search...')
 
     choice = ''
     while choice not in ['q', 'Q', 'quit', 'Quit']:
@@ -342,7 +354,7 @@ def search():
             search_most_common()
         elif choice == "8":
             search_truthiest()
-
+     
         search_menu_text ()
         choice = click.prompt("What records are you looking for?")
     
