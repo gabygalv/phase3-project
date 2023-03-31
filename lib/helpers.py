@@ -279,7 +279,10 @@ def search():
     elif choice == '4':
         input_shape = click.prompt("Enter a UFO shape to search by (-o to view suggestions)")
         by_shape = session.query(Sighting, UFO).join(UFO).where(UFO.shape == input_shape.capitalize())
-        click.echo([shape for shape in by_shape])
+        if by_shape.count() != 0:
+            click.echo([shape[0] for shape in by_shape])
+        else:
+            click.echo(f"No encounters reported for {input_shape}")
     elif choice == '5':
         input_encounter = click.prompt("Enter one of the following encounter types to search for: sighting, greeting, abduction)")
         by_type = session.query(Sighting).filter(Sighting.encounter_type.contains(input_encounter.capitalize()))
