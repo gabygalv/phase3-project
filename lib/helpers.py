@@ -97,8 +97,7 @@ def verify_date(string):
 def verify_encounter_type(string):
     if string == None:
         return False
-    # elif (string == "sighting") or (string == "greeting") or (string == "abduction"):
-    elif(1 == 1):
+    elif (string == "sighting") or (string == "greeting") or (string == "abduction"):
         return True
     else:
         return False
