@@ -27,19 +27,6 @@ def build_regex(pattern, string):
 
     return match
 
-def main_menu ():
-
-    choice = ""
-    main_menu_text()
-
-    while choice != 'quit' and choice != 'q':
-        if (choice == 'r') or (choice == 'report'):
-            report_sighting()
-        if (choice == 's') or (choice == 'search'):
-            search()
-
-        choice = click.prompt("Enter selection")
-
 def view_report_menu(name, loc, time, date, dur, enc, summ, obj):
 
     choice = None
@@ -82,8 +69,7 @@ def verify_location(string):
     pattern = r"^[A-z]{2,25},\s[A-Z]{2}$"
     if string == None:
         return False
-    # elif build_regex(pattern, string) != None:
-    elif(1 == 1):
+    elif build_regex(pattern, string) != None:
         return True
     else:
         return False
@@ -93,8 +79,7 @@ def verify_time(string):
     pattern = r"^(2[0-3]|[01][0-9]):([0-5][0-9])$"
     if string == None:
         return False
-    # elif build_regex(pattern, string) != None:
-    elif(1 == 1):
+    elif build_regex(pattern, string) != None:
         return True
     else:
         return False
@@ -104,8 +89,7 @@ def verify_date(string):
     pattern = r"^[0-9]{4}-(0[1-9]|1[0-2])-(3[0-1]|0[1-9]|[1-2][0-9])$"
     if string == None:
         return False
-    # elif build_regex(pattern, string) != None:
-    elif(1 == 1):
+    elif build_regex(pattern, string) != None:
         return True
     else:
         return False
@@ -242,14 +226,80 @@ def profile(username):
     session.add(new_truther)
     session.commit()
 
-def search():
-    # last_encounter = session.query(Sighting).first()
-    # locations = session.query(Sighting.location)
-    # by_date = session.query(Sighting).order_by(Sighting.date)
-    # query = session.query(Sighting).filter(Sighting.id == "1").all()
-    choice = ''
-    click.echo('What records are you looking for?')
-    choice = click.prompt('''
+def search_date():
+
+    by_date=session.query(Sighting).order_by(Sighting.date).limit(10).all()
+    click.echo([date for date in by_date])
+
+def search_year():
+    input_year = click.prompt("Enter the year you want to find encounters in")
+    by_year=session.query(Sighting)\
+        .filter(Sighting.date\
+        .contains(input_year))
+
+    if by_year.count() != 0:
+        click.echo([year for year in by_year])
+    else:
+        click.echo(f"No encounters reported in {input_year}")
+
+def search_loc():
+    input_location = click.prompt("Enter the location you want to find encounters in")
+    by_location=session.query(Sighting)\
+        .filter(Sighting.location\
+        .contains(input_location))
+
+    if by_location.count() != 0:
+        click.echo([location for location in by_location])
+    else:
+        click.echo(f"No encounters reported in {input_location}")
+
+def search_ufo():
+    input_shape = click.prompt("Enter a UFO shape to search by (-o to view suggestions)")
+    by_shape = session.query(Sighting, UFO)\
+        .join(UFO).where(UFO.shape == input_shape\
+        .capitalize())
+
+    if by_shape.count() != 0:
+        click.echo([shape[0] for shape in by_shape])
+    else:
+        click.echo(f"No encounters reported for {input_shape}")
+
+def search_encounter():
+    input_encounter = click.prompt("Enter one of the following encounter types to search for: sighting, greeting, abduction)")
+    by_type = session.query(Sighting)\
+        .filter(Sighting.encounter_type\
+        .contains(input_encounter.capitalize()))
+
+    click.echo([type for type in by_type])
+
+def search_most_rec():
+    recent = session.query(Sighting)\
+        .order_by((Sighting.id).desc()).limit(1)
+
+    click.echo([recent for recent in recent])
+
+def search_most_common():
+    most_common = session.query(UFO, func.count(Sighting.ufo_id))\
+        .join(Sighting).group_by(UFO.id)\
+        .order_by(func.count(Sighting.ufo_id)\
+        .desc()).limit(1)
+
+    print(f"{most_common[0][0].shape} shaped UFO was reported {most_common[0][1]} times")
+
+def search_truthiest():
+    truthiest = session.query(Truther, func.count(Sighting.truther_id))\
+        .join(Sighting).group_by(Truther.id)\
+        .order_by(func.count(Sighting.truther_id)\
+        .desc()).limit(1)
+
+    print(f'''
+        The truthiest truther is {truthiest[0][0].username}.
+        They've reported {truthiest[0][1]} encounters.
+        {truthiest[0][0].username} is based in {truthiest[0][0].base_location}.
+    ''')
+
+def search_menu_text ():
+    click.echo('''
             [Date     (1)]  : View 10 oldest encounters
             [Year     (2)]  : View encounters by specified year
             [Location (3)]  : View by location
@@ -258,44 +308,32 @@ def search():
             [Recent   (6)]  : Find most recently reported sighting
             [Common   (7)]  : Find most commonly reported UFO
             [Truthiest(8)]  : Find Truther with most encounters
-    ''')
-    if choice == '1':
-        by_date=session.query(Sighting).order_by(Sighting.date).limit(10).all()
-        click.echo([date for date in by_date])
-    elif choice == '2':
-         input_year = click.prompt("Enter the year you want to find encounters in")
-         by_year=session.query(Sighting).filter(Sighting.date.contains(input_year))
-         if by_year.count() != 0:
-            click.echo([year for year in by_year])
-         else:
-            click.echo(f"No encounters reported in {input_year}")
-    elif choice == '3':
-        input_location = click.prompt("Enter the location you want to find encounters in")
-        by_location=session.query(Sighting).filter(Sighting.location.contains(input_location))
-        if by_location.count() != 0:
-            click.echo([location for location in by_location])
-        else:
-            click.echo(f"No encounters reported in {input_location}")
-    elif choice == '4':
-        input_shape = click.prompt("Enter a UFO shape to search by (-o to view suggestions)")
-        by_shape = session.query(Sighting, UFO).join(UFO).where(UFO.shape == input_shape.capitalize())
-        if by_shape.count() != 0:
-            click.echo([shape[0] for shape in by_shape])
-        else:
-            click.echo(f"No encounters reported for {input_shape}")
-    elif choice == '5':
-        input_encounter = click.prompt("Enter one of the following encounter types to search for: sighting, greeting, abduction)")
-        by_type = session.query(Sighting).filter(Sighting.encounter_type.contains(input_encounter.capitalize()))
-        click.echo([type for type in by_type])
-    elif choice == '6':
-        recent = session.query(Sighting).order_by((Sighting.id).desc()).limit(1)
-        click.echo([recent for recent in recent])
-    elif choice == '7':
-        most_common = session.query(UFO, func.count(Sighting.ufo_id)).join(Sighting).group_by(UFO.id).order_by(func.count(Sighting.ufo_id).desc()).limit(1)
-        print(f"{most_common[0][0].shape} shaped UFO was reported {most_common[0][1]} times")
-    elif choice == '8':
-        truthiest = session.query(Truther, func.count(Sighting.truther_id)).join(Sighting).group_by(Truther.id).order_by(func.count(Sighting.truther_id).desc()).limit(1)
-        print(f"The truthiest truther is {truthiest[0][0].username}, they've reported {truthiest[0][1]} encounters, and they are based in {truthiest[0][0].base_location}")
-   
+            [Quit     (q)]  : Return to the main menu.
+        ''')
 
+def search():
+
+    choice = ''
+    while choice not in ['q', 'Q', 'quit', 'Quit']:
+
+        if choice == "1":
+            search_date()
+        elif choice == "2":
+            search_year()
+        elif choice == "3":
+            search_loc()
+        elif choice == "4":
+            search_ufo()
+        elif choice == "5":
+            search_encounter()
+        elif choice == "6":
+            search_most_rec()
+        elif choice == "7":
+            search_most_common()
+        elif choice == "8":
+            search_truthiest()
+
+        search_menu_text ()
+        choice = click.prompt("What records are you looking for?")
     
+    main_menu_text()
