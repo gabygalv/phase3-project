@@ -253,7 +253,9 @@ def search_loc():
         click.echo(f"No encounters reported in {input_location}")
 
 def search_ufo():
-    input_shape = click.prompt("Enter a UFO shape to search by (-o to view suggestions)")
+    input_shape = None
+    while(verify_ufo_shape(input_shape) == False):
+        input_shape = click.prompt("Enter a UFO shape to search by (-o to view suggestions)")
     by_shape = session.query(Sighting, UFO)\
         .join(UFO).where(UFO.shape == input_shape\
         .capitalize())

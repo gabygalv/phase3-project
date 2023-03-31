@@ -20,7 +20,7 @@ if __name__ == '__main__':
     faker = Faker()
 
     encounter_type = ["Sighting", "Greeting", "Abduction"]
-    ufo_shape = ["Circle", "Disk", "Fireball", "Light", "Other", "Sphere", "Triangle", "Unknown"]
+    ufo_shape = ["Circle", "Disk", "Fireball", "Light", "Other", "Sphere", "Triangle", "Unknown", "Flash", "Cylinder", "Pill"]
     ufo_summaries = [
     "I saw a bright light in the sky and then it zoomed away.",
     "A flying saucer landed in my backyard and some little green men came out.",
