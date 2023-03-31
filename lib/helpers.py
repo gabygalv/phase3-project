@@ -11,13 +11,22 @@ session = Session()
 
 def main_menu_text():
     click.echo('''
-        .__________________.
-        |  Main Menu       |
-        |__________________|
-        |  report     (r)  |
-        |  search     (s)  |
-        |  quit       (q)  |       
-        |__________________|
+    ______                             __               
+   / ____/___  _________  __  ______  / /____  _____    
+  / __/ / __ \/ ___/ __ \/ / / / __ \/ __/ _ \/ ___/    
+ / /___/ / / / /__/ /_/ / /_/ / / / / /_/  __/ /        
+/_____/_/_/_/\___/\____/\__,_/_/_/_/\__/\___/_/         
+      / ____/___  __  ______  / /____  _____            
+     / /   / __ \/ / / / __ \/ __/ _ \/ ___/            
+    / /___/ /_/ / /_/ / / / / /_/  __/ /                
+    \____/\____/\__,_/_/ /_/\__/\___/_/       
+           .__________________.
+           |  Main Menu       |
+           |__________________|
+           |  report     (r)  |
+           |  search     (s)  |
+           |  quit       (q)  |       
+           |__________________|
          ''')
 
 def build_regex(pattern, string):
@@ -158,7 +167,7 @@ def report_form():
     input_summary = None
     input_ufo_shape = None
 
-    input_truther = click.prompt("Please enter your name", type = str)
+    input_truther = click.prompt("Please enter your username (if you don't have one yet we'll create a new profile)", type = str)
     
     while(verify_location(input_location) == False):
         input_location = click.prompt("Where did the event occur? (City, ST) ", type=str)
