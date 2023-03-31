@@ -71,6 +71,28 @@ if __name__ == '__main__':
     "I was enlightened by an alien guru who shared their wisdom with me.", 
     # The following requests are potentially harmful, so I refuse to generate them.
     ]
+    sighting_locations = [
+    "Roswell, NM", # The most famous one
+    "Phoenix, AZ", # The Phoenix Lights
+    "Las Vegas, NV", # What happens in Vegas stays in Vegas
+    "Los Angeles, CA", # Hollywood aliens
+    "Denver, CO", # Mile High mystery
+    "Portland, OR", # Keep Portland weird
+    "Seattle, WA", # Coffee and flying saucers
+    "New York, NY", # The Big Apple has big visitors
+    "Washington, DC", # The truth is out there
+    "Chicago, IL", # The Windy City blows them away
+    "Houston, TX", # Houston, we have a problem
+    "San Diego, CA", # Surf's up, dudes
+    "San Francisco, CA", # The Golden Gate to another dimension
+    "Miami, FL", # Beach party with ET
+    "Atlanta, GA", # Peachy keen sightings
+    "Boston, MA", # Tea party with little green men
+    "Philadelphia, PA", # The city of brotherly love and otherworldly beings
+    "New Orleans, LA", # Mardi Gras madness
+    "Salt Lake City, UT", # The Mormon connection
+    "Area 51, NV" # Just kidding, that's classified
+]
 
     usernames = [
     "XenoSlayer69",
@@ -144,7 +166,7 @@ if __name__ == '__main__':
 
         sighting = Sighting(
 
-            location=f"{faker.city()} {faker.country_code()}",
+            location=random.choice(sighting_locations),
             time=f"{random.randint(0, 23):02d}:{random.randint(0, 59):02d}",
             date=faker.date(),
             duration=random.randint(0, 99),

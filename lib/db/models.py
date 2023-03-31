@@ -31,7 +31,7 @@ class UFO(Base):
     def __repr__(self):
      return f"ID: {self.id}, \n" \
             + f"Shape: {self.shape}, \n" \
-            + "\n"
+            +"***************** \n"
 
 
 class Sighting(Base):

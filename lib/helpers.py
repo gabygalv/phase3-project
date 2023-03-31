@@ -1,7 +1,7 @@
 import click
 import re
 from lib.db.models import (Sighting, Truther, UFO, Base)
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
 
 engine = create_engine('sqlite:///encounter_counter.db')
@@ -277,17 +277,22 @@ def search():
         else:
             click.echo(f"No encounters reported in {input_location}")
     elif choice == '4':
-        pass
+        input_shape = click.prompt("Enter a UFO shape to search by (-o to view suggestions)")
+        by_shape = session.query(Sighting, UFO).join(UFO).where(UFO.shape == input_shape.capitalize())
+        click.echo([shape for shape in by_shape])
     elif choice == '5':
         input_encounter = click.prompt("Enter one of the following encounter types to search for: sighting, greeting, abduction)")
         by_type = session.query(Sighting).filter(Sighting.encounter_type.contains(input_encounter.capitalize()))
         click.echo([type for type in by_type])
     elif choice == '6':
-        pass
+        recent = session.query(Sighting).order_by((Sighting.id).desc()).limit(1)
+        click.echo([recent for recent in recent])
     elif choice == '7':
-        pass
-    
+        most_common = session.query(UFO, func.count(Sighting.ufo_id)).join(Sighting).group_by(UFO.id).order_by(func.count(Sighting.ufo_id).desc()).limit(1)
+        print(f"{most_common[0][0].shape} shaped UFO was reported {most_common[0][1]} times")
+    elif choice == '8':
+        truthiest = session.query(Truther, func.count(Sighting.truther_id)).join(Sighting).group_by(Truther.id).order_by(func.count(Sighting.truther_id).desc()).limit(1)
+        print(f"The truthiest truther is {truthiest[0][0].username}, they've reported {truthiest[0][1]} encounters, and they are based in {truthiest[0][0].base_location}")
    
 
-    
     
