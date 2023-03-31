@@ -52,15 +52,16 @@ class Sighting(Base):
     ufo = relationship('UFO', backref='ufos')
 
     def __repr__(self):
-     return f"Location: {self.location}, \n" \
+     return f"\n" \
+            + f"Location: {self.location}, \n" \
             + f"Time: {self.time}, \n" \
             + f"Date: {self.date}, \n" \
             + f"Duration: {self.duration}, \n" \
             + f"Encounter Type: {self.encounter_type}, \n" \
             + f"Summary: {self.summary}, \n" \
-            + "***************** \n"
-            # + f"Truther ID: {self.truther_id}, \n" \
-            # + f"UFO Shape ID: {self.ufo_id} \n" \
+            + f"UFO Shape: {self.ufo.shape} \n" \
+            + f"Truther: {self.truther.username}, \n" \
+            + "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* \n"
             
     # @classmethod
 
