@@ -1,6 +1,7 @@
 from sqlalchemy import (PrimaryKeyConstraint, Column, String, Integer, DateTime, ForeignKey)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref
+from prettytable import PrettyTable
 
 
 #manages tables
@@ -52,17 +53,37 @@ class Sighting(Base):
     ufo = relationship('UFO', backref='ufos')
 
     def __repr__(self):
-     return f"Location: {self.location}, \n" \
-            + f"Time: {self.time}, \n" \
-            + f"Date: {self.date}, \n" \
-            + f"Duration: {self.duration}, \n" \
-            + f"Encounter Type: {self.encounter_type}, \n" \
-            + f"Summary: {self.summary}, \n" \
-            + "***************** \n"
-            # + f"Truther ID: {self.truther_id}, \n" \
-            # + f"UFO Shape ID: {self.ufo_id} \n" \
+        x = PrettyTable()
+        x.field_names = ("Encounter Report", "")
+        x.add_rows(
+            [
+                ["Location", self.location],
+                ["Time", self.time],
+                ["Date", self.date],
+                ["Duration", self.duration],
+                ["Encounter Type", self.encounter_type],
+                ["Summary", self.summary],
+                ["Truther", self.truther.username],
+                ["UFO Shape", self.ufo.shape]
+            ]
+        )
+
+        # print (x)
+
+        return str(f'{x} \n')
+
+    # def __repr__(self):
+    #  return f"Location: {self.location}, \n" \
+    #         + f"Time: {self.time}, \n" \
+    #         + f"Date: {self.date}, \n" \
+    #         + f"Duration: {self.duration}, \n" \
+    #         + f"Encounter Type: {self.encounter_type}, \n" \
+    #         + f"Summary: {self.summary}, \n" \
+    #         + "***************** \n"
+    #         # + f"Truther ID: {self.truther_id}, \n" \
+    #         # + f"UFO Shape ID: {self.ufo_id} \n" \
             
-    # @classmethod
+    # # @classmethod
 
 
 

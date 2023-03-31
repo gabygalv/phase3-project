@@ -213,7 +213,11 @@ def report_form():
 
 def report_sighting():
 
-    click.echo("UFO OR UAP ENCOUNTER REPORT")
+    click.echo('''
+    ************************************
+        UFO OR UAP ENCOUNTER REPORT
+    ************************************
+    ''')
 
     choice = ""
     while (choice != "N") and (choice !="n"):
@@ -241,6 +245,7 @@ def search_date():
 
     by_date=session.query(Sighting).order_by(Sighting.date).limit(10).all()
     click.echo([date for date in by_date])
+    click.echo('\n')
 
 def search_year():
     input_year = click.prompt("Enter the year you want to find encounters in")
