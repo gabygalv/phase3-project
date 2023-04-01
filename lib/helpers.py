@@ -243,29 +243,31 @@ def profile(username):
 
 def search_date():
 
-    by_date=session.query(Sighting).order_by(Sighting.date).limit(10).all()
-    click.echo([date for date in by_date])
-    click.echo('\n')
+    reports_by_date=session.query(Sighting).order_by(Sighting.date).limit(10).all()
+    for report in reports_by_date:
+        print(report.build_encounter_table())
 
 def search_year():
     input_year = click.prompt("Enter the year you want to find encounters in")
-    by_year=session.query(Sighting)\
+    reports_by_year=session.query(Sighting)\
         .filter(Sighting.date\
         .contains(input_year))
 
-    if by_year.count() != 0:
-        click.echo([year for year in by_year])
+    if reports_by_year.count() != 0:
+        for report in reports_by_year:
+            print(report.build_encounter_table())
     else:
         click.echo(f"No encounters reported in {input_year}")
 
 def search_loc():
     input_location = click.prompt("Enter the location you want to find encounters in")
-    by_location=session.query(Sighting)\
+    reports_by_location=session.query(Sighting)\
         .filter(Sighting.location\
         .contains(input_location))
 
-    if by_location.count() != 0:
-        click.echo([location for location in by_location])
+    if reports_by_location.count() != 0:
+        for report in reports_by_location:
+            print(report.build_encounter_table())
     else:
         click.echo(f"No encounters reported in {input_location}")
 
@@ -273,12 +275,13 @@ def search_ufo():
     input_shape = None
     while(verify_ufo_shape(input_shape) == False):
         input_shape = click.prompt("Enter a UFO shape to search by (-o to view suggestions)")
-    by_shape = session.query(Sighting, UFO)\
+    reports_by_shape = session.query(Sighting, UFO)\
         .join(UFO).where(UFO.shape == input_shape\
         .capitalize())
 
-    if by_shape.count() != 0:
-        click.echo([shape[0] for shape in by_shape])
+    if reports_by_shape.count() != 0:
+        for report in reports_by_shape:
+            print(report[0].build_encounter_table())
     else:
         click.echo(f"No encounters reported for {input_shape}")
 
@@ -294,7 +297,8 @@ def search_most_rec():
     recent = session.query(Sighting)\
         .order_by((Sighting.id).desc()).limit(1)
 
-    click.echo([recent for recent in recent])
+    for report in recent:
+            print(report.build_encounter_table())
 
 def search_most_common():
     most_common = session.query(UFO, func.count(Sighting.ufo_id))\

@@ -3,7 +3,6 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref
 from prettytable import PrettyTable
 
-
 #manages tables
 Base = declarative_base()
 
@@ -52,10 +51,24 @@ class Sighting(Base):
     truther = relationship('Truther', backref='truthers')
     ufo = relationship('UFO', backref='ufos')
 
-    def __repr__(self):
+    def get_data_tuple(self):
+       return {
+          'id': self.id,
+          'location':self.location,
+          'time': self.time,
+          'date': self.date,
+          'duration': self.duration,
+          'encounter_type': self.encounter_type,
+          'summary': self.summary,
+          'truther': self.truther,
+          'ufo': self.ufo
+       }
+
+    def build_encounter_table(self):
 
         x = PrettyTable()
         x.field_names = ("Encounter Report", "")
+        x.align[""] = 'l'
         x.add_rows(
             [
                 ["Location", self.location],
@@ -69,20 +82,18 @@ class Sighting(Base):
             ]
         )
 
-        # print (x)
-
-        return str(f'{x} \n')
-
-    # def __repr__(self):
-    #  return f"Location: {self.location}, \n" \
-    #         + f"Time: {self.time}, \n" \
-    #         + f"Date: {self.date}, \n" \
-    #         + f"Duration: {self.duration}, \n" \
-    #         + f"Encounter Type: {self.encounter_type}, \n" \
-    #         + f"Summary: {self.summary}, \n" \
-    #         + "***************** \n"
-    #         # + f"Truther ID: {self.truther_id}, \n" \
-    #         # + f"UFO Shape ID: {self.ufo_id} \n" \
+        return(x)
+        
+    def __repr__(self):
+     return f"Location: {self.location}, \n" \
+            + f"Time: {self.time}, \n" \
+            + f"Date: {self.date}, \n" \
+            + f"Duration: {self.duration}, \n" \
+            + f"Encounter Type: {self.encounter_type}, \n" \
+            + f"Summary: {self.summary}, \n" \
+            + "***************** \n"
+            # + f"Truther ID: {self.truther_id}, \n" \
+            # + f"UFO Shape ID: {self.ufo_id} \n" \
 
 
 
